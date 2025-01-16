@@ -13,7 +13,7 @@ pyvenv.cfg
 pip-selfcheck.json
 
 ### dotenv template
-.env
+*.env
 
 ### Database template
 *.accdb
@@ -30,3 +30,7 @@ pip-selfcheck.json
 
 *.rdb
 
+.idea
+__pychache__/
+*.pyc
+*.local*
