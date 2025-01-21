@@ -33,12 +33,19 @@ add:
 ## Setup project
 setup: install activate
 
-run:
+run-docker:
+	docker-compose up -d
+
+run-back:
 	@echo "$$(tput bold)Starting backend:$$(tput sgr0)"
 	#poetry run fastapi dev main.py --host $(HOST) --reload --port $(PORT) --reload
 	poetry run uvicorn main:app --host $(HOST) --reload --port $(PORT) --reload --env-file $(ENV_FILE)
 
+run: run-docker run-back
 
+
+stop-docker:
+	docker
 
 ## Migrate
 migrate-create:
