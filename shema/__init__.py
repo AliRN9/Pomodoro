@@ -1,4 +1,4 @@
-from shema.task import TaskShema, TaskCreateShema
+from shema.task import TaskShema
 from shema.user import UserLoginSchema, UserCreateSchema
 
-__all__ = ['TaskShema', 'TaskCreateShema', 'UserLoginSchema', 'UserCreateSchema']
+__all__ = ['TaskShema', 'UserLoginSchema', 'UserCreateSchema']

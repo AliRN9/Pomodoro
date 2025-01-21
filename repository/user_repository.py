@@ -11,11 +11,11 @@ from sqlalchemy.orm import Session
 class UserRepository:
     db_session: Session
 
-    def create_user(self, username: str, password: str) -> DBUser:
+    def create_user(self, username: str, password: str, access_token: str) -> DBUser:
         query = insert(DBUser).values(
             username=username,
             password=password,
-        ).returning(DBUser.id)
+            access_token=access_token).returning(DBUser.id)
 
         with self.db_session() as session:
             user_id: DBUser.id = session.execute(query).scalar()
@@ -27,6 +27,7 @@ class UserRepository:
         query = select(DBUser).where(DBUser.id == user_id)
         with self.db_session() as session:
             return session.execute(query).scalar_one_or_none()
+
 
     def get_user_by_username(self, username: str) -> Optional[DBUser]:
         user = select(DBUser).where(DBUser.username == username)
