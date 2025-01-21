@@ -1,14 +1,15 @@
+from dataclasses import dataclass
 from typing import List
 from sqlalchemy import select, delete, update
 from sqlalchemy.orm import Session
-from database import Tasks as DBTasks
-from database import Categories as DBCategories
+from models import Tasks as DBTasks
+from models import Categories as DBCategories
 from shema.task import TaskShema
 
 
+@dataclass
 class TaskRepository:
-    def __init__(self, db_session: Session):
-        self.db_session = db_session
+    db_session: Session
 
     def get_tasks(self) -> List[DBTasks]:
         with self.db_session() as session:
@@ -29,13 +30,12 @@ class TaskRepository:
             session.commit()
             return task_model.id
 
-    def update_task_name(self, task_id: int,name:str ) -> DBTasks:
+    def update_task_name(self, task_id: int, name: str) -> DBTasks:
         query = update(DBTasks).where(DBTasks.id == task_id).values(name=name).returning(DBTasks.id)
         with self.db_session() as session:
             task_id = session.execute(query).scalar_one_or_none()
             session.commit()
             return self.get_task(task_id)
-
 
     def delete_task(self, task_id: int) -> None:
         with self.db_session() as session:
