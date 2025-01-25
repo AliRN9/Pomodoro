@@ -2,10 +2,11 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class TaskShema(BaseModel):
-    id: int = Field(include=False,default=None)
+    id: int = Field(include=False, default=None)
     name: str | None = None
     pomodoro_count: int | None = None
-    category_id: int = Field(alias='category_id')
+    category_id: int
+    user_id: int
 
     class Config:
         from_attributes = True
@@ -15,3 +16,9 @@ class TaskShema(BaseModel):
         if self.name is None and self.pomodoro_count is None:
             raise ValueError("Task name or pomodoro count must be set")
         return self
+
+
+class TaskCreateShema(BaseModel):
+    name: str | None = None
+    pomodoro_count: int | None = None
+    category_id: int = Field(alias='category_id')
