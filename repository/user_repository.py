@@ -3,18 +3,20 @@ from typing import Optional
 
 from sqlalchemy import insert, select
 
+
 from models import UserProfile as DBUser
 from sqlalchemy.orm import Session
+
+from shema import UserCreateSchema
 
 
 @dataclass
 class UserRepository:
     db_session: Session
 
-    def create_user(self, username: str, password: str) -> DBUser:
+    def create_user(self, user: UserCreateSchema) -> DBUser:
         query = insert(DBUser).values(
-            username=username,
-            password=password,
+            **user.model_dump(),
         ).returning(DBUser.id)
 
         with self.db_session() as session:
@@ -32,3 +34,8 @@ class UserRepository:
         user = select(DBUser).where(DBUser.username == username)
         with self.db_session() as session:
             return session.execute(user).scalar_one_or_none()
+
+    def get_google_user_by_email(self, email: str) -> Optional[DBUser]:
+        query = select(DBUser).where(DBUser.email == email)
+        with self.db_session() as session:
+            return session.execute(query).scalar_one_or_none()
