@@ -9,7 +9,7 @@ class TokenExpire(Exception):
     detail = 'Token expired'
 
 class TokenNotCorrect(Exception):
-    detail = 'Token not correct'
+    detail = 'Token not correct or expired'
 
 class TaskNotFound(Exception):
     detail = 'Task not found'

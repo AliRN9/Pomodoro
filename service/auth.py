@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+
+from black import timezone
+
 from exception import UserNotFoundException, UserNotCorrectPasswordException, TokenExpire, TokenNotCorrect
 from models import UserProfile as DBUser
 from repository import UserRepository
@@ -13,6 +16,7 @@ from jose.exceptions import JWTError
 class AuthService:
     user_repository: UserRepository
     settings: Settings
+
 
     def login(self, username: str, password: str) -> UserLoginSchema:
         user: DBUser = self.user_repository.get_user_by_username(username)
@@ -28,9 +32,9 @@ class AuthService:
             raise UserNotCorrectPasswordException
 
     def generate_token(self, user_id: int) -> str:
-        expires_data_inix = (datetime.utcnow() + timedelta(days=7)).timestamp()
+        expires_data_inix = (datetime.now(timezone.utc) + self.settings.TOKEN_EXPIRE).timestamp()
         token = jwt.encode(
-            {'user_id': user_id, 'expire': expires_data_inix},
+            {'user_id': user_id, 'exp': expires_data_inix},
             key=self.settings.JWT_SECRET_KEY,
             algorithm=self.settings.JWT_ENCODE_ALGORITHM
         )
@@ -42,6 +46,6 @@ class AuthService:
                                  algorithms=[self.settings.JWT_ENCODE_ALGORITHM])
         except JWTError:
             raise TokenNotCorrect
-        if payload['expire'] < datetime.utcnow().timestamp():
-            raise TokenExpire
+        # if payload['expire'] < datetime.utcnow().timestamp():
+        #     raise TokenExpire
         return payload['user_id']
