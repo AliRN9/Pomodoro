@@ -16,7 +16,8 @@ class TaskCache:
             return [TaskShema.model_validate(json.loads(task)) for task in tasks_json]
 
     def set_task(self, tasks: list[TaskShema]):
-        tasks_json = [task.json() for task in tasks]
-        with self.redis as redis:
-            redis.lpush("tasks", *tasks_json)
-            redis.expire("tasks", 30)
+        tasks_json = [task.model_dump_json() for task in tasks]
+        if tasks_json:
+            with self.redis as redis:
+                redis.lpush("tasks", *tasks_json)
+                redis.expire("tasks", 30)
