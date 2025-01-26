@@ -3,9 +3,8 @@ from typing import List, Annotated
 
 from fastapi import APIRouter, status, Depends
 
-from dependecy import get_tasks_repository, get_tasks_service, get_request_user_id
+from dependecy import  get_tasks_service, get_request_user_id
 from exception import TaskNotFound
-from repository import TaskRepository, TaskCache
 from service import TaskService
 from shema import TaskShema, TaskCreateShema
 
