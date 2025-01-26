@@ -3,11 +3,12 @@ from datetime import datetime, timedelta
 
 from black import timezone
 
+from client import GoogleClient
 from exception import UserNotFoundException, UserNotCorrectPasswordException, TokenExpire, TokenNotCorrect
 from models import UserProfile as DBUser
 from repository import UserRepository
 from settings import Settings
-from shema import UserLoginSchema
+from shema import UserLoginSchema, UserCreateSchema, GoogleUserData
 from jose import jwt
 from jose.exceptions import JWTError
 
@@ -16,7 +17,7 @@ from jose.exceptions import JWTError
 class AuthService:
     user_repository: UserRepository
     settings: Settings
-
+    google_client: GoogleClient
 
     def login(self, username: str, password: str) -> UserLoginSchema:
         user: DBUser = self.user_repository.get_user_by_username(username)
@@ -49,3 +50,21 @@ class AuthService:
         # if payload['expire'] < datetime.utcnow().timestamp():
         #     raise TokenExpire
         return payload['user_id']
+
+    def get_google_redirect_url(self) -> str:
+        return self.settings.google_redirect_url
+
+    def google_auth(self, code: str):
+        user_data: GoogleUserData = self.google_client.get_user_info(code=code)
+        if user := self.user_repository.get_google_user_by_email(email=user_data.email):
+            access_token = self.generate_token(user_id=user.id)
+
+            return UserLoginSchema(user_id=user.id, access_token=access_token)
+
+        create_user_data = UserCreateSchema(
+            email=user_data.email,
+            name=user_data.name,
+        )
+        created_user = self.user_repository.create_user(create_user_data)
+        access_token = self.generate_token(user_id=created_user.id)
+        return UserLoginSchema(user_id=created_user.id, access_token=access_token)
