@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class GoogleUserData(BaseModel):
@@ -6,4 +6,12 @@ class GoogleUserData(BaseModel):
     email: str
     verified_email: bool
     name: str
+    access_token: str
+
+
+class YandexUserData(BaseModel):
+    id: int
+    login: str
+    name: str = Field(alias="real_name")
+    email: str = Field(alias="default_email")
     access_token: str

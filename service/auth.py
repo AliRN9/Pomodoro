@@ -3,12 +3,12 @@ from datetime import datetime, timedelta
 
 from black import timezone
 
-from client import GoogleClient
+from client import GoogleClient, YandexClient
 from exception import UserNotFoundException, UserNotCorrectPasswordException, TokenExpire, TokenNotCorrect
 from models import UserProfile as DBUser
 from repository import UserRepository
 from settings import Settings
-from shema import UserLoginSchema, UserCreateSchema, GoogleUserData
+from shema import UserLoginSchema, UserCreateSchema, GoogleUserData, YandexUserData
 from jose import jwt
 from jose.exceptions import JWTError
 
@@ -18,6 +18,7 @@ class AuthService:
     user_repository: UserRepository
     settings: Settings
     google_client: GoogleClient
+    yandex_client: YandexClient
 
     def login(self, username: str, password: str) -> UserLoginSchema:
         user: DBUser = self.user_repository.get_user_by_username(username)
@@ -56,7 +57,25 @@ class AuthService:
 
     def google_auth(self, code: str):
         user_data: GoogleUserData = self.google_client.get_user_info(code=code)
-        if user := self.user_repository.get_google_user_by_email(email=user_data.email):
+        if user := self.user_repository.get_user_by_email(email=user_data.email):
+            access_token = self.generate_token(user_id=user.id)
+
+            return UserLoginSchema(user_id=user.id, access_token=access_token)
+
+        create_user_data = UserCreateSchema(
+            email=user_data.email,
+            name=user_data.name,
+        )
+        created_user = self.user_repository.create_user(create_user_data)
+        access_token = self.generate_token(user_id=created_user.id)
+        return UserLoginSchema(user_id=created_user.id, access_token=access_token)
+
+    def get_yandex_redirect_url(self) -> str:
+        return self.settings.yandex_redirect_url
+
+    def yandex_auth(self, code: str) -> str:
+        user_data: YandexUserData = self.yandex_client.get_user_info(code=code)
+        if user := self.user_repository.get_user_by_email(email=user_data.email):
             access_token = self.generate_token(user_id=user.id)
 
             return UserLoginSchema(user_id=user.id, access_token=access_token)
