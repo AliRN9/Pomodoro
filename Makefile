@@ -41,7 +41,7 @@ run-back:
 	#poetry run fastapi dev main.py --host $(HOST) --reload --port $(PORT) --reload
 	#poetry run uvicorn main:app --host $(HOST) --reload --port $(PORT) --reload --env-file $(ENV_FILE)
 	#poetry run  gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
-	poetry run gunicorn main:app -c infra/gunicorn.conf.py
+	poetry run gunicorn app.main:app -c gunicorn.conf.py
 
 
 run: run-docker run-back
