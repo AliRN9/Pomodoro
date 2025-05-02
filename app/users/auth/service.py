@@ -3,12 +3,13 @@ from datetime import datetime
 
 from black import timezone
 
-from app.client import GoogleClient, YandexClient
+from app.users.auth.client import GoogleClient, YandexClient
 from app.exception import UserNotFoundException, UserNotCorrectPasswordException, TokenNotCorrect
-from app.models import UserProfile as DBUser
-from app.repository import UserRepository
+from app.users.user_profile.models import UserProfile as DBUser
+from app.users.user_profile.repository import UserRepository
 from app.settings import Settings
-from app.shema import UserLoginSchema, UserCreateSchema, GoogleUserData, YandexUserData
+from app.users.user_profile.shema import UserCreateSchema
+from app.users.auth.shema import GoogleUserData, YandexUserData, UserLoginSchema
 from jose import jwt
 from jose.exceptions import JWTError
 
@@ -55,7 +56,7 @@ class AuthService:
     def get_google_redirect_url(self) -> str:
         return self.settings.google_redirect_url
 
-    async def google_auth(self, code: str)-> UserLoginSchema:
+    async def google_auth(self, code: str) -> UserLoginSchema:
         user_data: GoogleUserData = await self.google_client.get_user_info(code=code)
 
         if user := await self.user_repository.get_user_by_email(email=user_data.email):

@@ -33,22 +33,44 @@ add:
 ## Setup project
 setup: install activate
 
-run-docker:
-	docker-compose up -d
 
-run-back:
+back-run:
 	@echo "$$(tput bold)Starting backend:$$(tput sgr0)"
-	#poetry run fastapi dev main.py --host $(HOST) --reload --port $(PORT) --reload
-	#poetry run uvicorn main:app --host $(HOST) --reload --port $(PORT) --reload --env-file $(ENV_FILE)
+	#poetry run fastapi dev app.main.py --host $(HOST) --reload --port $(PORT) --reload
+	#poetry run uvicorn app.main:app --host $(HOST) --reload --port $(PORT) --reload
 	#poetry run  gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 	poetry run gunicorn app.main:app -c gunicorn.conf.py
 
 
 run: run-docker run-back
 
+# Start Docker containers
+docker-start:
+	docker compose start
 
-stop-docker:
-	docker
+# Stop Docker containers
+docker-stop:
+	docker compose stop
+
+docker-up:
+	docker compose up -d
+
+docker-down:
+	docker compose down
+
+## Build containers
+docker-build:
+	docker compose build
+
+## Rebuild Docker containers
+docker-rebuild:
+	docker compose down -v
+	$(MAKE) docker-build
+	$(MAKE) docker-up
+
+# Remove project-related images
+docker-clean:
+	docker compose down --volumes --rmi all
 
 ## Migrate
 migrate-create:
@@ -120,3 +142,7 @@ help:
 		printf "\n"; \
 	}' \
 	| more $(shell test $(shell uname) = Darwin && echo '--no-init --raw-control-chars')
+
+# ----Различные команды----
+
+#export ENVIRONMENT=local

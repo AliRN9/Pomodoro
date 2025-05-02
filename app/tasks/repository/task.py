@@ -3,9 +3,9 @@ from typing import List, Optional, Sequence
 from sqlalchemy import select, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
-from app.models import Tasks as DBTasks
-from app.models import Categories as DBCategories
-from app.shema import TaskCreateShema
+from app.tasks.models import Tasks as DBTasks
+from app.tasks.models import Categories as DBCategories
+from app.tasks.shema import TaskCreateShema
 
 
 @dataclass

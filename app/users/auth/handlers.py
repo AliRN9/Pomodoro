@@ -5,8 +5,9 @@ from fastapi.responses import RedirectResponse
 
 from app.dependecy import get_auth_service
 from app.exception import UserNotCorrectPasswordException, UserNotFoundException
-from app.service.auth import AuthService
-from app.shema import UserLoginSchema, UserCreateSchema
+from app.users.auth.service import AuthService
+from app.users.user_profile.shema import UserCreateSchema
+from app.users.auth.shema import UserLoginSchema
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -41,7 +42,6 @@ async def google_auth(
         auth_service: Annotated[AuthService, Depends(get_auth_service)],
         code: str
 ):
-    print(code)
     return await auth_service.google_auth(code=code)
 
 
