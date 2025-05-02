@@ -15,10 +15,6 @@ access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"
 
 
 environment = os.getenv('ENVIRONMENT')
-print(f"{environment=}")
 env = os.path.join(os.getcwd(), f'.{environment}.env')
-print(f"{env=}")
-print('ssssssssss')
 if os.path.exists(env):
-    print('loading env vars')
     load_dotenv(dotenv_path=env)

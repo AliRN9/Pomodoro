@@ -4,10 +4,10 @@ from typing import Optional
 from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import UserProfile as DBUser
+from app.users.user_profile.models import UserProfile as DBUser
 from sqlalchemy.orm import Session
 
-from app.shema import UserCreateSchema
+from app.users.user_profile.shema import UserCreateSchema
 
 
 @dataclass

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 from app.exception import TaskNotFound
-from app.repository import TaskCache, TaskRepository
-from app.shema import TaskShema, TaskCreateShema
+from app.tasks.repository import TaskCache, TaskRepository
+from app.tasks.shema import TaskShema, TaskCreateShema
 
 
 @dataclass

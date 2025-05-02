@@ -6,9 +6,9 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     DB_HOST: str = 'localhost'
     DB_PORT: int = 5432
-    DB_USER: str = 'postgres'
-    DB_PASSWORD: str = 'password'
-    DB_NAME: str = 'pomodoro'
+    DB_USER: str = ''
+    DB_PASSWORD: str = ''
+    DB_NAME: str = ''
     # DB_DRIVER: str = 'postgresql+psycopg2' синхронный драйвер
     DB_DRIVER: str = 'postgresql+asyncpg' #aсинхронный драйвер
 
@@ -16,9 +16,10 @@ class Settings(BaseSettings):
     CACHE_PORT: int = 6379
     CACHE_DB: int = 0
 
-    JWT_SECRET_KEY: str = 'secret'
-    JWT_ENCODE_ALGORITHM: str = 'HS256'
+    JWT_SECRET_KEY: str = ''
+    JWT_ENCODE_ALGORITHM: str = ''
     TOKEN_EXPIRE: timedelta = timedelta(days=7)
+
 
     GOOGLE_CLIENT_ID: str = ''
     GOOGLE_REDIRECT_URI: str = ''
@@ -28,6 +29,7 @@ class Settings(BaseSettings):
     YANDEX_CLIENT_ID: str = ''
     YANDEX_CLIENT_SECRET: str = ''
     YANDEX_REDIRECT_URI: str = ''
+
     YANDEX_TOKEN_URL: str = 'https://oauth.yandex.ru/token'
 
     @property

@@ -2,16 +2,21 @@ import httpx
 from fastapi import Depends, Security, security, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.infrastructure.cache import get_redis_connection
-from app.client import GoogleClient, YandexClient
+from app.users.auth.client import GoogleClient, YandexClient
 from app.infrastructure.database import get_db_session
 from app.exception import TokenExpire, TokenNotCorrect
-from app.repository import TaskRepository, TaskCache, UserRepository
-from app.service import TaskService, UserService, AuthService
+from app.tasks.repository import TaskRepository, TaskCache
+from app.users.user_profile.repository import UserRepository
+from app.tasks.service import TaskService
+from app.users.user_profile.service import UserService
+from app.users.auth.service import AuthService
+
 from app.settings import Settings
 
 
 async def get_async_client() -> httpx.AsyncClient:
     return httpx.AsyncClient()
+
 
 async def get_tasks_repository(db_session: AsyncSession = Depends(get_db_session)) -> TaskRepository:
     return TaskRepository(db_session=db_session)
@@ -36,12 +41,12 @@ async def get_tasks_service(
     )
 
 
-async def get_google_client(async_client:httpx.AsyncClient = Depends(get_async_client)) -> GoogleClient:
+async def get_google_client(async_client: httpx.AsyncClient = Depends(get_async_client)) -> GoogleClient:
     return GoogleClient(settings=Settings(), async_client=async_client)
 
 
-async def get_yandex_client(async_client:httpx.AsyncClient = Depends(get_async_client)) -> YandexClient:
-    return YandexClient(settings=Settings(),async_client=async_client)
+async def get_yandex_client(async_client: httpx.AsyncClient = Depends(get_async_client)) -> YandexClient:
+    return YandexClient(settings=Settings(), async_client=async_client)
 
 
 async def get_auth_service(

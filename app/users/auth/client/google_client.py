@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import httpx
 
 from app.settings import Settings
-from app.shema import GoogleUserData
+from app.users.auth.shema import GoogleUserData
 
 
 @dataclass
@@ -14,7 +14,7 @@ class GoogleClient:
         access_token = await self._get_user_access_token(code=code)
         # async with self.async_client as client:
         user_info = await self.async_client.get('https://www.googleapis.com/oauth2/v1/userinfo',
-                                         headers={'Authorization': f'Bearer {access_token}'})
+                                                headers={'Authorization': f'Bearer {access_token}'})
         return GoogleUserData(**user_info.json(), access_token=access_token)
 
     async def _get_user_access_token(self, code: str) -> str:

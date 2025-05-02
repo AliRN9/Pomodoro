@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import httpx
 
 from app.settings import Settings
-from app.shema import YandexUserData
+from app.users.auth.shema import YandexUserData
 
 
 @dataclass
