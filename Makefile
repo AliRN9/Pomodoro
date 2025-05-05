@@ -35,6 +35,7 @@ setup: install activate
 
 
 back-run:
+	$export ENVIRONMENT=local
 	@echo "$$(tput bold)Starting backend:$$(tput sgr0)"
 	#poetry run fastapi dev app.main.py --host $(HOST) --reload --port $(PORT) --reload
 	#poetry run uvicorn app.main:app --host $(HOST) --reload --port $(PORT) --reload
@@ -92,10 +93,6 @@ test:
 	poetry run pytest tests/ -v
 
 
-
-## Docker
-build:
-	docker compose up
 
 ## Clean cache files
 clean:
