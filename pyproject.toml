@@ -27,6 +27,13 @@ greenlet = "^3.1.1"
 gunicorn = "^23.0.0"
 uvicorn-worker = "^0.3.0"
 python-dotenv = "^1.0.1"
+pytest = {extras = ["async"], version = "^8.3.5"}
+pytest-trio = "^0.8.0"
+pytest-twisted = "^1.14.3"
+anyio = "^4.9.0"
+twisted = "^24.11.0"
+factory-boy = "^3.3.3"
+pytest-factoryboy = "^2.7.0"
 
 
 [build-system]

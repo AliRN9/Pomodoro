@@ -1,7 +1,6 @@
+from typing import Optional
+
 from pydantic import BaseModel
-from typing_extensions import Optional
-
-
 
 
 class UserCreateSchema(BaseModel):

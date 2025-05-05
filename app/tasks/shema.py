@@ -1,15 +1,16 @@
-from pydantic import BaseModel, Field, model_validator
+from typing import Optional
+
+from pydantic import BaseModel, Field, model_validator, ConfigDict
 
 
 class TaskShema(BaseModel):
-    id: int = Field(include=False, default=None)
-    name: str | None = None
-    pomodoro_count: int | None = None
+    id: int = Field(exclude=True, default=None)
+    name: Optional[str] = None
+    pomodoro_count: Optional[int] = None
     category_id: int
     user_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
     @model_validator(mode="after")
     def check_name_or_count(self):
@@ -19,6 +20,6 @@ class TaskShema(BaseModel):
 
 
 class TaskCreateShema(BaseModel):
-    name: str | None = None
-    pomodoro_count: int | None = None
+    name: Optional[str] = None
+    pomodoro_count: Optional[int] = None
     category_id: int = Field(alias='category_id')
