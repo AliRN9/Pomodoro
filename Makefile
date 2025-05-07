@@ -35,12 +35,13 @@ setup: install activate
 
 
 back-run:
-	$export ENVIRONMENT=local
+	@export ENVIRONMENT=local
+	@echo "$$(ENVIRONMENT)"
 	@echo "$$(tput bold)Starting backend:$$(tput sgr0)"
-	#poetry run fastapi dev app.main.py --host $(HOST) --reload --port $(PORT) --reload
+	#poetry run fastapi dev app.main.py --host $(HOST)  --port $(PORT) --reload --env-file $(ENV_FILE)
 	#poetry run uvicorn app.main:app --host $(HOST) --reload --port $(PORT) --reload
-	#poetry run  gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 	poetry run gunicorn app.main:app -c gunicorn.conf.py
+
 
 
 run: run-docker run-back
@@ -87,6 +88,8 @@ migrate-downgrade:
 	alembic downgrade $(DOWNGRADE_VERSION)
 
 
+docker-test-up:
+	docker compose -f docker-compose.test.yml up
 
 test:
 	@echo "Running tests..."
