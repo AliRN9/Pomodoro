@@ -58,7 +58,6 @@ class AuthService:
 
     async def google_auth(self, code: str) -> UserLoginSchema:
         user_data: GoogleUserData = await self.google_client.get_user_info(code=code)
-
         if user := await self.user_repository.get_user_by_email(email=user_data.email):
             access_token = self.generate_token(user_id=user.id)
 

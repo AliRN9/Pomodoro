@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from alembic import context
@@ -6,6 +7,10 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.infrastructure.database import Base
 from app.settings import Settings
+
+from dotenv import load_dotenv
+
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -59,7 +64,7 @@ def do_run_migrations(connection):
                       connection=connection,
                       target_metadata=target_metadata,
                       include_schemas=True,
-                      version_table_shema=target_metadata.schema
+                      version_table_schema=target_metadata.schema
                       )
 
     with context.begin_transaction():
@@ -73,6 +78,12 @@ async def run_migrations_online():
     and associate a connection with the context.
 
     """
+
+    environment = os.getenv('ENVIRONMENT')
+    env = os.path.join(os.getcwd(), f'.{environment}.env')
+    if os.path.exists(env):
+        load_dotenv(dotenv_path=env, override=True)
+
     connectable = create_async_engine(Settings().db_url, future=True)
 
     async with connectable.connect() as connection:
@@ -84,6 +95,9 @@ async def run_migrations_online():
 # if context.is_offline_mode():
 #     run_migrations_offline()
 # else:
+
+
+
 asyncio.run(run_migrations_online())
 
 #
