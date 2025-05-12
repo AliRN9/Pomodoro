@@ -3,6 +3,7 @@ from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, insert
 
+from app.settings import Settings
 from app.users.user_profile.models import UserProfile
 from fastapi import status
 
@@ -42,7 +43,6 @@ async def test_login_user__success(auth_service, db_session: AsyncSession):
         login_user = (
             await session.execute(select(UserProfile).where(UserProfile.username == username))).scalar_one_or_none()
 
-
     assert login_user is not None
     assert user.user_id == login_user.id
 
@@ -53,6 +53,13 @@ async def test_get_tasks_path__fail(anonymous_client: AsyncClient):
     response = await anonymous_client.get("/task/all")
 
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+
+async def test_get_tasks_path__success(anonymous_client: AsyncClient):
+    response = await anonymous_client.get("/task/test_all")
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == []
 
 
 async def test_google_auth___create_tasks(auth_service, db_session: AsyncSession, anonymous_client: AsyncClient):
