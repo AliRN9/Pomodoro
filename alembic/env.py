@@ -7,7 +7,8 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.infrastructure.database import Base
 from app.settings import Settings
-
+from app.users.user_profile.models import *
+from app.tasks.models import *
 from dotenv import load_dotenv
 
 

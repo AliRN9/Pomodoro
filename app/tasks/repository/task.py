@@ -5,12 +5,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from app.tasks.models import Tasks as DBTasks
 from app.tasks.models import Categories as DBCategories
-from app.tasks.shema import TaskCreateShema
+from app.tasks.shema import TaskCreateShema, TaskShema
 
 
 @dataclass
 class TaskRepository:
     db_session: AsyncSession
+
+    async def get_all_tasks(self) -> Sequence[DBTasks]:
+        async with self.db_session as session:
+            task: Sequence[DBTasks] = (await session.execute(select(DBTasks))).scalars().all()
+            return task
 
     async def get_user_task(self, task_id, user_id: int) -> DBTasks:
         query = select(DBTasks).where(DBTasks.user_id == user_id, DBTasks.id == task_id)
