@@ -9,8 +9,12 @@ from app.settings import Settings
 settings = Settings()
 
 celery = Celery(__name__)
-celery.conf.broker_url = settings.CELERY_REDIS_URL
-celery.conf.result_backend = settings.CELERY_RESULT_BACKEND
+
+# celery.conf.broker_url = settings.CELERY_REDIS_URL
+# celery.conf.result_backend = settings.CELERY_RESULT_BACKEND
+
+celery.conf.broker_url = settings.CELERY_BROKER_URL
+celery.conf.result_backend = "rpc://"
 
 
 
