@@ -1,4 +1,5 @@
 from app.settings import Settings
+from app.users.auth.client import MailClient
 from app.users.auth.service import AuthService
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,7 +13,8 @@ def mock_auth_service(yandex_client, google_client, fake_user_repository) -> Aut
         user_repository=fake_user_repository,
         settings=Settings(),
         google_client=google_client,
-        yandex_client=yandex_client
+        yandex_client=yandex_client,
+        mail_client=MailClient(),
     )
 
 
@@ -22,5 +24,6 @@ async def auth_service(yandex_client, google_client, settings: Settings, db_sess
         user_repository=UserRepository(db_session=db_session),
         settings=Settings(),
         google_client=google_client,
-        yandex_client=yandex_client
+        yandex_client=yandex_client,
+        mail_client=MailClient(),
     )

@@ -3,8 +3,9 @@ from datetime import datetime
 
 from black import timezone
 
-from app.users.auth.client import GoogleClient, YandexClient
+from app.users.auth.client import GoogleClient, YandexClient, MailClient
 from app.exception import UserNotFoundException, UserNotCorrectPasswordException, TokenNotCorrect
+
 from app.users.user_profile.models import UserProfile as DBUser
 from app.users.user_profile.repository import UserRepository
 from app.settings import Settings
@@ -20,6 +21,7 @@ class AuthService:
     settings: Settings
     google_client: GoogleClient
     yandex_client: YandexClient
+    mail_client: MailClient
 
     async def login(self, username: str, password: str) -> UserLoginSchema:
         user: DBUser = await self.user_repository.get_user_by_username(username)
@@ -69,6 +71,7 @@ class AuthService:
         )
         created_user = await self.user_repository.create_user(create_user_data)
         access_token = self.generate_token(user_id=created_user.id)
+        self.mail_client.send_welcome_email(to=user_data.email)
         return UserLoginSchema(user_id=created_user.id, access_token=access_token)
 
     def get_yandex_redirect_url(self) -> str:
@@ -87,4 +90,5 @@ class AuthService:
         )
         created_user = await self.user_repository.create_user(create_user_data)
         access_token = self.generate_token(user_id=created_user.id)
+        self.mail_client.send_welcome_email(to=user_data.email)
         return UserLoginSchema(user_id=created_user.id, access_token=access_token)

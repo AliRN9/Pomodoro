@@ -9,6 +9,7 @@ from faker import Factory as FakerFactory
 
 faker = FakerFactory.create()
 
+MY_EMAIL = "ali.rama2anov@yandex.ru"
 
 @dataclass
 class FakeGoogleClient:
@@ -26,7 +27,7 @@ class FakeGoogleClient:
     def google_user_info_data(self) -> dict:
         return {
             "id": faker.random_int(),
-            "email": faker.email(),
+            "email": MY_EMAIL,
             "verified_email": True,
             "name": faker.name()
         }
