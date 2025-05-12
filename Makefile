@@ -96,9 +96,14 @@ test:
 	@echo "Running tests..."
 	poetry run pytest tests/ -v
 
+
+celery:
+	@echo "Running celery..."
+	poetry run celery -A worker.celery worker --loglevel=info
+
 flower:
 	@echo "Running flower..."
-	celery --broker=redis://localhost:6379/1 flower --port=5555
+	celery --broker=redis://localhost:6379/0 flower --port=5555
 
 ## Clean cache files
 clean:

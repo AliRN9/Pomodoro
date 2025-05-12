@@ -15,8 +15,14 @@ services:
       - '5432:5432'
     env_file: .db.test.env
 
-  cache:
+  cache-test:
     image: redis:8.0-M02-alpine
     restart: always
     ports:
       - '6379:6379'
+
+  rabbitmq-test:
+    image: rabbitmq:4-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
