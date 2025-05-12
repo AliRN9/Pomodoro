@@ -91,11 +91,14 @@ migrate-downgrade:
 docker-test-up:
 	docker compose -f docker-compose.test.yml up
 
+
 test:
 	@echo "Running tests..."
 	poetry run pytest tests/ -v
 
-
+flower:
+	@echo "Running flower..."
+	celery --broker=redis://localhost:6379/1 flower --port=5555
 
 ## Clean cache files
 clean:

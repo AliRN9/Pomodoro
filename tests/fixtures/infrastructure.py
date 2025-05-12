@@ -9,7 +9,7 @@ from app.infrastructure.database.database import Base
 
 @pytest.fixture
 def settings():
-    return Settings()
+    return Settings(_env_file=".test.env")
 
 
 engine = create_async_engine(url="postgresql+asyncpg://postgres:password@0.0.0.0:5432/pomodoro-test", future=True,
