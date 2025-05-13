@@ -31,15 +31,7 @@ class Settings(BaseSettings):
     YANDEX_REDIRECT_URI: str = ''
     YANDEX_TOKEN_URL: str = 'https://oauth.yandex.ru/token'
 
-    CELERY_REDIS_URL: str = 'redis://localhost:6379'
-    CELERY_RESULT_BACKEND: str = 'redis://localhost:6379'
-
-    CELERY_BROKER_URL: str = 'amqp://guest:guest@localhost:5672//'
-
-    SMTP_HOST: str = 'smtp.yandex.ru'
-    SMTP_PORT: int = 465
-    FROM_EMAIL: str = ''
-    SMTP_PASSWORD: str = ''
+    AMQP_URL: str = 'amqp://guest:guest@localhost:5672//'
 
     @property
     def db_url(self) -> str:
@@ -58,5 +50,8 @@ class Settings(BaseSettings):
         return f"https://oauth.yandex.ru/authorize?response_type=code&client_id={self.YANDEX_CLIENT_ID}&force_confirm=yes"
 
     class Config:
-        # env_file = '.local.env'
-        env_file = '.test.env'
+        env_file = '.local.env'
+        # env_file = '.test.env'
+
+
+settings = Settings()
