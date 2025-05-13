@@ -50,7 +50,7 @@ async def get_yandex_client(async_client: httpx.AsyncClient = Depends(get_async_
 
 
 async def get_mail_client() -> MailClient:
-    return MailClient()
+    return MailClient(settings=Settings())
 
 
 async def get_auth_service(
