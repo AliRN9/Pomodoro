@@ -91,6 +91,8 @@ migrate-downgrade:
 docker-test-up:
 	docker compose -f docker-compose.test.yml up -d
 
+docker-test-stop:
+	docker compose -f docker-compose.test.yml stop
 
 test:
 	@echo "Running tests..."
