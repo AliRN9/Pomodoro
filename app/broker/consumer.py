@@ -16,15 +16,16 @@ class BrokerConsumer:
 
     async def consume_callback_message(self) -> None:
         await self.open_connection()
-        print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         try:
             async for message in self.consumer:
-                print('sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss')
+                print("sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
                 print(f"{message.value=}")
         except Exception as e:
             print(e)
         finally:
             await self.close_connection()
+
 
 #
 # from app.infrastructure.broker import get_broker_connection

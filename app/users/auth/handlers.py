@@ -13,21 +13,16 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/login", response_model=UserLoginSchema)
-async def login_user(user: UserCreateSchema,
-                     auth_service: Annotated[AuthService, Depends(get_auth_service)],
-                     ) -> UserLoginSchema:
+async def login_user(
+    user: UserCreateSchema,
+    auth_service: Annotated[AuthService, Depends(get_auth_service)],
+) -> UserLoginSchema:
     try:
         return await auth_service.login(username=user.username, password=user.password)
     except UserNotFoundException as e:
-        raise HTTPException(
-            status_code=404,
-            detail=e.detail
-        )
+        raise HTTPException(status_code=404, detail=e.detail)
     except UserNotCorrectPasswordException as e:
-        raise HTTPException(
-            status_code=401,
-            detail=e.detail
-        )
+        raise HTTPException(status_code=401, detail=e.detail)
 
 
 @router.get("/login/google", response_class=RedirectResponse)
@@ -39,8 +34,7 @@ async def google_login(auth_service: Annotated[AuthService, Depends(get_auth_ser
 
 @router.get("/google")
 async def google_auth(
-        auth_service: Annotated[AuthService, Depends(get_auth_service)],
-        code: str
+    auth_service: Annotated[AuthService, Depends(get_auth_service)], code: str
 ):
     return await auth_service.google_auth(code=code)
 
@@ -54,7 +48,6 @@ async def yandex_login(auth_service: Annotated[AuthService, Depends(get_auth_ser
 
 @router.get("/yandex")
 async def yandex_auth(
-        auth_service: Annotated[AuthService, Depends(get_auth_service)],
-        code: str
+    auth_service: Annotated[AuthService, Depends(get_auth_service)], code: str
 ):
     return await auth_service.yandex_auth(code=code)

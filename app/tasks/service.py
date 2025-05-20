@@ -19,8 +19,7 @@ class TaskService:
         await self.task_cache.set_task(tasks_schema)  # кладем в редис
         return tasks_schema
 
-
-    async def get_all_tasks(self)-> list[TaskShema]:
+    async def get_all_tasks(self) -> list[TaskShema]:
         if cache_tasks := await self.task_cache.get_task():  # достаем из редис
             return cache_tasks
 
@@ -34,8 +33,12 @@ class TaskService:
         task = await self.task_repository.get_task(task_id)
         return TaskShema.model_validate(task)
 
-    async def update_task_name(self, task_id: int, name: str, user_id: int) -> TaskShema:
-        task = await self.task_repository.get_user_task(user_id=user_id, task_id=task_id)
+    async def update_task_name(
+        self, task_id: int, name: str, user_id: int
+    ) -> TaskShema:
+        task = await self.task_repository.get_user_task(
+            user_id=user_id, task_id=task_id
+        )
         if task is None:
             raise TaskNotFound
 
@@ -43,7 +46,9 @@ class TaskService:
         return TaskShema.model_validate(task)
 
     async def delete_task(self, task_id: int, user_id: int) -> None:
-        task = await self.task_repository.get_user_task(user_id=user_id, task_id=task_id)
+        task = await self.task_repository.get_user_task(
+            user_id=user_id, task_id=task_id
+        )
         if task is None:
             raise TaskNotFound
         await self.task_repository.delete_task(task_id=task_id)

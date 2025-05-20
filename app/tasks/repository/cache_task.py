@@ -11,7 +11,7 @@ class TaskCache:
 
     async def get_task(self) -> list[TaskShema]:
         async with self.redis as redis:
-            tasks_json = await redis.lrange('tasks', 0, -1)
+            tasks_json = await redis.lrange("tasks", 0, -1)
 
             return [TaskShema.model_validate(json.loads(task)) for task in tasks_json]
 

@@ -15,9 +15,13 @@ class UserRepository:
     db_session: AsyncSession
 
     async def create_user(self, user: UserCreateSchema) -> DBUser:
-        query = insert(DBUser).values(
-            **user.model_dump(),
-        ).returning(DBUser.id)
+        query = (
+            insert(DBUser)
+            .values(
+                **user.model_dump(),
+            )
+            .returning(DBUser.id)
+        )
 
         async with self.db_session as session:
             user_id: DBUser.id = (await session.execute(query)).scalar()
