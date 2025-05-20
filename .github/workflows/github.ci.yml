@@ -33,7 +33,7 @@ jobs:
           poetry -V
 
       - name: Install dependencies (with dev tools)
-        run: poetry install --no-root --with dev
+        run: poetry install --no-root
 
       - name: Black
         run: poetry run black app
