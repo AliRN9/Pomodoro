@@ -22,4 +22,4 @@ class TaskShema(BaseModel):
 class TaskCreateShema(BaseModel):
     name: Optional[str] = None
     pomodoro_count: Optional[int] = None
-    category_id: int = Field(alias='category_id')
+    category_id: int = Field(alias="category_id")

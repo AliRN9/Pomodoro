@@ -4,11 +4,14 @@ from app.settings import Settings
 
 settings = Settings()
 
-engine = create_async_engine(url=settings.db_url, future=True, echo=True, pool_pre_ping=True)
-AsyncSessionFactory = async_sessionmaker(engine,
-                                         autoflush=False,
-                                         expire_on_commit=False,
-                                         )
+engine = create_async_engine(
+    url=settings.db_url, future=True, echo=True, pool_pre_ping=True
+)
+AsyncSessionFactory = async_sessionmaker(
+    engine,
+    autoflush=False,
+    expire_on_commit=False,
+)
 
 
 # engine = create_engine(settings.db_url)
@@ -18,6 +21,7 @@ AsyncSessionFactory = async_sessionmaker(engine,
 # async def get_db_session() -> AsyncSession:
 #     async with AsyncSessionFactory() as session:
 #         yield session
+
 
 async def get_db_session() -> AsyncSession:
     try:

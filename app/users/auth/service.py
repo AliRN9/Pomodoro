@@ -4,7 +4,11 @@ from datetime import datetime
 from black import timezone
 
 from app.users.auth.client import GoogleClient, YandexClient, MailClient
-from app.exception import UserNotFoundException, UserNotCorrectPasswordException, TokenNotCorrect
+from app.exception import (
+    UserNotFoundException,
+    UserNotCorrectPasswordException,
+    TokenNotCorrect,
+)
 
 from app.users.user_profile.models import UserProfile as DBUser
 from app.users.user_profile.repository import UserRepository
@@ -37,23 +41,28 @@ class AuthService:
             raise UserNotCorrectPasswordException
 
     def generate_token(self, user_id: int) -> str:
-        expires_data_inix = (datetime.now(timezone.utc) + self.settings.TOKEN_EXPIRE).timestamp()
+        expires_data_inix = (
+            datetime.now(timezone.utc) + self.settings.TOKEN_EXPIRE
+        ).timestamp()
         token = jwt.encode(
-            {'user_id': user_id, 'exp': expires_data_inix},
+            {"user_id": user_id, "exp": expires_data_inix},
             key=self.settings.JWT_SECRET_KEY,
-            algorithm=self.settings.JWT_ENCODE_ALGORITHM
+            algorithm=self.settings.JWT_ENCODE_ALGORITHM,
         )
         return token
 
     def get_user_id_from_access_token(self, access_token: str) -> int:
         try:
-            payload = jwt.decode(token=access_token, key=self.settings.JWT_SECRET_KEY,
-                                 algorithms=[self.settings.JWT_ENCODE_ALGORITHM])
+            payload = jwt.decode(
+                token=access_token,
+                key=self.settings.JWT_SECRET_KEY,
+                algorithms=[self.settings.JWT_ENCODE_ALGORITHM],
+            )
         except JWTError:
             raise TokenNotCorrect
         # if payload['expire'] < datetime.utcnow().timestamp():
         #     raise TokenExpire
-        return payload['user_id']
+        return payload["user_id"]
 
     def get_google_redirect_url(self) -> str:
         return self.settings.google_redirect_url

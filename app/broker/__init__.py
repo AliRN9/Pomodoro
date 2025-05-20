@@ -1,4 +1,4 @@
 from app.broker.producer import BrokerProducer
 from app.broker.consumer import BrokerConsumer
 
-__all__ = ['BrokerConsumer', 'BrokerProducer']
+__all__ = ["BrokerConsumer", "BrokerProducer"]

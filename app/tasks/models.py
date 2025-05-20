@@ -6,7 +6,7 @@ from app.infrastructure.database import Base
 
 
 class Tasks(Base):
-    __tablename__ = 'Tasks'
+    __tablename__ = "Tasks"
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     name: Mapped[str]
@@ -16,7 +16,7 @@ class Tasks(Base):
 
 
 class Categories(Base):
-    __tablename__ = 'Categories'
+    __tablename__ = "Categories"
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     type: Mapped[Optional[str]]  # либо так mapped_column(nullable=True)

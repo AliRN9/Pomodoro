@@ -23,10 +23,9 @@ from app.settings import settings
 async def get_broker_producer() -> BrokerProducer:
     return BrokerProducer(
         producer=AIOKafkaProducer(
-            bootstrap_servers=settings.BROKER_URL,
-            loop=asyncio.get_event_loop()
+            bootstrap_servers=settings.BROKER_URL, loop=asyncio.get_event_loop()
         ),
-        email_topic=settings.EMAIL_TOPIC
+        email_topic=settings.EMAIL_TOPIC,
     )
 
 
@@ -44,7 +43,9 @@ async def get_async_client() -> httpx.AsyncClient:
     return httpx.AsyncClient()
 
 
-async def get_tasks_repository(db_session: AsyncSession = Depends(get_db_session)) -> TaskRepository:
+async def get_tasks_repository(
+    db_session: AsyncSession = Depends(get_db_session),
+) -> TaskRepository:
     return TaskRepository(db_session=db_session)
 
 
@@ -53,54 +54,53 @@ async def get_tasks_cache_repository() -> TaskCache:
     return TaskCache(redis_connection)
 
 
-async def get_user_repository(db_session: AsyncSession = Depends(get_db_session)) -> UserRepository:
+async def get_user_repository(
+    db_session: AsyncSession = Depends(get_db_session),
+) -> UserRepository:
     return UserRepository(db_session=db_session)
 
 
 async def get_tasks_service(
-        task_repository: TaskRepository = Depends(get_tasks_repository),
-        task_cache: TaskCache = Depends(get_tasks_cache_repository)
+    task_repository: TaskRepository = Depends(get_tasks_repository),
+    task_cache: TaskCache = Depends(get_tasks_cache_repository),
 ) -> TaskService:
-    return TaskService(
-        task_repository=task_repository,
-        task_cache=task_cache
-    )
+    return TaskService(task_repository=task_repository, task_cache=task_cache)
 
 
-async def get_google_client(async_client: httpx.AsyncClient = Depends(get_async_client)) -> GoogleClient:
+async def get_google_client(
+    async_client: httpx.AsyncClient = Depends(get_async_client),
+) -> GoogleClient:
     return GoogleClient(settings=settings, async_client=async_client)
 
 
-async def get_yandex_client(async_client: httpx.AsyncClient = Depends(get_async_client)) -> YandexClient:
+async def get_yandex_client(
+    async_client: httpx.AsyncClient = Depends(get_async_client),
+) -> YandexClient:
     return YandexClient(settings=settings, async_client=async_client)
 
 
-async def get_mail_client(
-        broker_producer=Depends(get_broker_producer)
-) -> MailClient:
-    return MailClient(
-        settings=settings,
-        broker_producer=broker_producer)
+async def get_mail_client(broker_producer=Depends(get_broker_producer)) -> MailClient:
+    return MailClient(settings=settings, broker_producer=broker_producer)
 
 
 async def get_auth_service(
-        user_repository: UserRepository = Depends(get_user_repository),
-        google_client: GoogleClient = Depends(get_google_client),
-        yandex_client: YandexClient = Depends(get_yandex_client),
-        mail_client: MailClient = Depends(get_mail_client)
+    user_repository: UserRepository = Depends(get_user_repository),
+    google_client: GoogleClient = Depends(get_google_client),
+    yandex_client: YandexClient = Depends(get_yandex_client),
+    mail_client: MailClient = Depends(get_mail_client),
 ) -> AuthService:
     return AuthService(
         user_repository=user_repository,
         settings=settings,
         google_client=google_client,
         yandex_client=yandex_client,
-        mail_client=mail_client
+        mail_client=mail_client,
     )
 
 
 async def get_users_service(
-        user_repository: UserRepository = Depends(get_user_repository),
-        auth_service: AuthService = Depends(get_auth_service)
+    user_repository: UserRepository = Depends(get_user_repository),
+    auth_service: AuthService = Depends(get_auth_service),
 ) -> UserService:
     return UserService(user_repository=user_repository, auth_service=auth_service)
 
@@ -109,14 +109,13 @@ reusable_auth2 = security.HTTPBearer()
 
 
 def get_request_user_id(
-        auth_service: AuthService = Depends(get_auth_service),
-        token: security.http.HTTPAuthorizationCredentials = Security(reusable_auth2)
+    auth_service: AuthService = Depends(get_auth_service),
+    token: security.http.HTTPAuthorizationCredentials = Security(reusable_auth2),
 ) -> int:
     try:
         user_id = auth_service.get_user_id_from_access_token(token.credentials)
     except TokenExpire:
-        raise HTTPException(status_code=401,
-                            detail="Token has expired")
+        raise HTTPException(status_code=401, detail="Token has expired")
     except TokenNotCorrect as e:
         raise HTTPException(status_code=401, detail=e.detail)
 

@@ -18,10 +18,10 @@ class MailClient:
         # connection = await aio_pika.connect_robust(self.settings.AMQP_URL)
 
         email_body = {
-            'message': "Welcome to Pomodoro",
-            'user_email': to,
+            "message": "Welcome to Pomodoro",
+            "user_email": to,
             "subject": "Welcome message",
-            "correlation_id": str(uuid.uuid4())
+            "correlation_id": str(uuid.uuid4()),
         }
 
         # для kafka
