@@ -1,7 +1,10 @@
 from dataclasses import dataclass
+from http.client import HTTPException
 from typing import List, Optional, Sequence
-from sqlalchemy import select, delete, update
+from fastapi import status
+from sqlalchemy import select, delete, update, text
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.tasks.models import Tasks as DBTasks
 from app.tasks.models import Categories as DBCategories
@@ -11,6 +14,14 @@ from app.tasks.shema import TaskCreateShema, TaskShema
 @dataclass
 class TaskRepository:
     db_session: AsyncSession
+
+    async def ping_db(self):
+        async with self.db_session as session:
+            try:
+                await session.execute(text('SELECT 1'))
+            except IntegrityError:
+                raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail='Database is not available')
+            return {"text": "Database is available"}
 
     async def get_all_tasks(self) -> Sequence[DBTasks]:
         async with self.db_session as session:
