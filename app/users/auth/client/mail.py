@@ -1,8 +1,5 @@
-import json
 import uuid
-from pyexpat.errors import messages
 
-import aio_pika
 from dataclasses import dataclass
 
 from app.broker import BrokerProducer

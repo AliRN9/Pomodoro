@@ -5,7 +5,6 @@ from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.users.user_profile.models import UserProfile as DBUser
-from sqlalchemy.orm import Session
 
 from app.users.user_profile.shema import UserCreateSchema
 

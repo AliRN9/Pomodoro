@@ -1,5 +1,3 @@
-import time
-
 from fastapi import HTTPException
 from typing import List, Annotated
 
@@ -19,7 +17,7 @@ async def get_tasks_log(tasks_count: int):
 
 
 @router.get("/test_all", response_model=List[TaskShema])
-async def get_tasks(
+async def test_get_tasks(
     task_service: Annotated[TaskService, Depends(get_tasks_service)],
     background_tasks: BackgroundTasks,
 ):

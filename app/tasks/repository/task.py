@@ -1,14 +1,13 @@
 from dataclasses import dataclass
 from http.client import HTTPException
-from typing import List, Optional, Sequence
+from typing import Optional, Sequence
 from fastapi import status
 from sqlalchemy import select, delete, update, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 from app.tasks.models import Tasks as DBTasks
 from app.tasks.models import Categories as DBCategories
-from app.tasks.shema import TaskCreateShema, TaskShema
+from app.tasks.shema import TaskCreateShema
 
 
 @dataclass
