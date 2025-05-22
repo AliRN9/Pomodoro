@@ -1,5 +1,4 @@
 from datetime import timedelta
-
 from pydantic_settings import BaseSettings
 
 
@@ -12,7 +11,7 @@ class Settings(BaseSettings):
     # DB_DRIVER: str = 'postgresql+psycopg2' синхронный драйвер
     DB_DRIVER: str = "postgresql+asyncpg"  # aсинхронный драйвер
 
-    CACHE_HOST: str = "localhost"
+    CACHE_HOST: str = "cache"
     CACHE_PORT: int = 6379
     CACHE_DB: int = 0
 
@@ -44,6 +43,10 @@ class Settings(BaseSettings):
     # @property
     # def redis_url(self) -> str:
     #     return f'{self.CACHE_HOST}:{self.CACHE_PORT}/{self.CACHE_DB}'
+    #
+    # @property
+    # def rabbit_url(self) -> str:
+    #     return f"amqp://{self.RABBIT_USER}:{self.RABBIT_PASSWORD}@{self.RABBIT_HOST}:{self.RABBIT_PORT}/"
 
     @property
     def google_redirect_url(self) -> str:

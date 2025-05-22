@@ -10,6 +10,7 @@ from app.tasks.handlers import router as task_router
 from app.tasks.repository import TaskRepository
 from app.users.user_profile.handlers import router as user_router
 from app.users.auth.handlers import router as auth_router
+from app.sentry import sentry_sdk
 
 
 # @asynccontextmanager
@@ -36,7 +37,8 @@ async def lifespan(app: FastAPI):
         pass
 
 
-app = FastAPI(lifespan=lifespan)
+# app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 routers = [task_router, user_router, auth_router]
 for router in routers:
@@ -51,3 +53,9 @@ async def ping():
 @app.get("/db/ping")
 async def db_ping(tast_repository: TaskRepository = Depends(get_tasks_repository)):
     await tast_repository.ping_db()
+
+
+@app.get("/sentry/ping")
+async def trigger_error_ping():
+    await sentry_sdk.capture_exception(Exception("capture_exception"))
+    division_by_zero = 1 / 0
