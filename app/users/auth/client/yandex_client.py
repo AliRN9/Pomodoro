@@ -29,8 +29,6 @@ class YandexClient:
         }
         print(f"{data=}")
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        response = await self.async_client.post(
-            self.settings.YANDEX_TOKEN_URL, data=data, headers=headers
-        )
+        response = await self.async_client.post(self.settings.YANDEX_TOKEN_URL, data=data, headers=headers)
         access_token = response.json()["access_token"]
         return access_token

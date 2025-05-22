@@ -10,6 +10,7 @@ from app.tasks.handlers import router as task_router
 from app.tasks.repository import TaskRepository
 from app.users.user_profile.handlers import router as user_router
 from app.users.auth.handlers import router as auth_router
+from app.sentry import sentry_sdk
 
 
 # @asynccontextmanager
@@ -24,9 +25,7 @@ from app.users.auth.handlers import router as auth_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     consumer = await get_broker_consumer()
-    task = asyncio.create_task(
-        consumer.consume_callback_message()
-    )  # НЕ блокируем здесь
+    task = asyncio.create_task(consumer.consume_callback_message())  # НЕ блокируем здесь
     yield
     await consumer.close_connection()
     task.cancel()
@@ -36,7 +35,8 @@ async def lifespan(app: FastAPI):
         pass
 
 
-app = FastAPI(lifespan=lifespan)
+# app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 routers = [task_router, user_router, auth_router]
 for router in routers:
@@ -51,3 +51,9 @@ async def ping():
 @app.get("/db/ping")
 async def db_ping(tast_repository: TaskRepository = Depends(get_tasks_repository)):
     await tast_repository.ping_db()
+
+
+@app.get("/sentry/ping")
+async def trigger_error_ping():
+    await sentry_sdk.capture_exception(Exception("capture_exception"))
+    # division_by_zero = 1 / 0

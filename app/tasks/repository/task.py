@@ -27,9 +27,7 @@ class TaskRepository:
 
     async def get_all_tasks(self) -> Sequence[DBTasks]:
         async with self.db_session as session:
-            task: Sequence[DBTasks] = (
-                (await session.execute(select(DBTasks))).scalars().all()
-            )
+            task: Sequence[DBTasks] = (await session.execute(select(DBTasks))).scalars().all()
             return task
 
     async def get_user_task(self, task_id, user_id: int) -> DBTasks:
@@ -67,12 +65,7 @@ class TaskRepository:
         task_id: int,
         name: str,
     ) -> DBTasks:
-        query = (
-            update(DBTasks)
-            .where(DBTasks.id == task_id)
-            .values(name=name)
-            .returning(DBTasks.id)
-        )
+        query = update(DBTasks).where(DBTasks.id == task_id).values(name=name).returning(DBTasks.id)
         async with self.db_session as session:
             task_id = (await session.execute(query)).scalar_one_or_none()
             await session.flush()

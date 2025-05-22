@@ -1,7 +1,4 @@
 tests
-alembic
 .venv
 docker-compose.test.yml
-alembic.ini
-README.md
-gunicorn.conf.py
+__pycache__

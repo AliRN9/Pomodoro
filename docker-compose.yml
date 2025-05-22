@@ -1,6 +1,7 @@
 services:
 
   web:
+    container_name: web
     build: .
     ports:
       - "8000:8000"
@@ -21,12 +22,12 @@ services:
     ports:
       - '5432:5432'
     env_file: .db.local.env
-#
-#  cache:
-#    image: redis:8.0-M02-alpine
-#    restart: always
-#    ports:
-#      - '6379:6379'
+
+  cache:
+    image: redis:8.0-M02-alpine
+    restart: always
+    ports:
+      - '6379:6379'
 #
 #  rabbitmq:
 #    image: rabbitmq:4-management
