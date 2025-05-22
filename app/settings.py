@@ -54,7 +54,9 @@ class Settings(BaseSettings):
 
     @property
     def yandex_redirect_url(self) -> str:
-        return f"https://oauth.yandex.ru/authorize?response_type=code&client_id={self.YANDEX_CLIENT_ID}&force_confirm=yes"
+        return (
+            f"https://oauth.yandex.ru/authorize?response_type=code&client_id={self.YANDEX_CLIENT_ID}&force_confirm=yes"
+        )
 
     class Config:
         env_file = ".local.env"

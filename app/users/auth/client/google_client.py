@@ -28,8 +28,6 @@ class GoogleClient:
             "grant_type": "authorization_code",
         }
         # async with self.async_client as client:
-        response = await self.async_client.post(
-            self.settings.GOOGLE_TOKEN_URL, data=data
-        )
+        response = await self.async_client.post(self.settings.GOOGLE_TOKEN_URL, data=data)
         access_token = response.json()["access_token"]
         return access_token

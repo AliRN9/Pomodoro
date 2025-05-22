@@ -22,9 +22,7 @@ from app.settings import settings
 
 async def get_broker_producer() -> BrokerProducer:
     return BrokerProducer(
-        producer=AIOKafkaProducer(
-            bootstrap_servers=settings.BROKER_URL, loop=asyncio.get_event_loop()
-        ),
+        producer=AIOKafkaProducer(bootstrap_servers=settings.BROKER_URL, loop=asyncio.get_event_loop()),
         email_topic=settings.EMAIL_TOPIC,
     )
 

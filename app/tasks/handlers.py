@@ -62,9 +62,7 @@ async def update_task(
 ):
     # task = next((task for task in fixture_tasks if task["id"] == task_id), None)
     try:
-        return await task_service.update_task_name(
-            task_id=task_id, name=name, user_id=user_id
-        )
+        return await task_service.update_task_name(task_id=task_id, name=name, user_id=user_id)
     except TaskNotFound as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=e.detail)
 

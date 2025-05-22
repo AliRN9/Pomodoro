@@ -39,9 +39,7 @@ class AuthService:
             raise UserNotCorrectPasswordException
 
     def generate_token(self, user_id: int) -> str:
-        expires_data_inix = (
-                datetime.now(timezone.utc) + self.settings.TOKEN_EXPIRE
-        ).timestamp()
+        expires_data_inix = (datetime.now(timezone.utc) + self.settings.TOKEN_EXPIRE).timestamp()
         token = jwt.encode(
             {"user_id": user_id, "exp": expires_data_inix},
             key=self.settings.JWT_SECRET_KEY,

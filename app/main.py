@@ -25,9 +25,7 @@ from app.sentry import sentry_sdk
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     consumer = await get_broker_consumer()
-    task = asyncio.create_task(
-        consumer.consume_callback_message()
-    )  # НЕ блокируем здесь
+    task = asyncio.create_task(consumer.consume_callback_message())  # НЕ блокируем здесь
     yield
     await consumer.close_connection()
     task.cancel()
@@ -58,4 +56,4 @@ async def db_ping(tast_repository: TaskRepository = Depends(get_tasks_repository
 @app.get("/sentry/ping")
 async def trigger_error_ping():
     await sentry_sdk.capture_exception(Exception("capture_exception"))
-    division_by_zero = 1 / 0
+    # division_by_zero = 1 / 0
